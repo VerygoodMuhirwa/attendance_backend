@@ -209,4 +209,26 @@ const addAttendance = async (req, res) => {
     }
 
 }
-module.exports = { addAttendance };
+
+
+const deleteAttendance = async (req, res) => {
+    try {
+      const id = req.params.id;
+  
+      const allRecords = await previousAttendanceModel.findOne({});
+  
+      const recordToDelete = allRecords.previousAttendances.find(data => data._id == id);
+        if (!recordToDelete) {
+        return res.status(404).json({ error: "Record not found" });
+      }
+        allRecords.previousAttendances = allRecords.previousAttendances.filter(data => data._id != id);
+        await allRecords.save();
+      
+      return res.status(200).json({ message: "Record deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  };
+  
+module.exports = { addAttendance, deleteAttendance };

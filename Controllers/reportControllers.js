@@ -5,7 +5,6 @@ const previousAttendanceModel = require("../models/previousAttendances");
 const getReport = async (req, res) => {
     try {
         let attendance = await previousAttendanceModel.findOne({})
-
         if (!attendance) {
             return res.status(200).send([])
         }
@@ -96,26 +95,30 @@ const getReport = async (req, res) => {
             familyPercentages.push(dataToReturn);
           }
 
-
         const abarwayi = []
         const abafiteImpamvu = []
         for(const record of attendance.attendanceData) {
-            if (record.ararwaye == true) {
+            if (record.ararwaye == true || record.yaje !=true ) {
                 abarwayi.push(record)
             }
             if (record.afiteIndiMpamvu == true) {
                 abafiteImpamvu.push(record)
-            }
-        }
+            } 
+            
+        } 
         
 
-        const data = [{
+        const attendanceRecords = {
             GeneralPresenceRecords,
-            GeneralPercentageRecords   
-        }
-        ]
+            GeneralPercentageRecords ,
+            familyAttendance  ,
+            familyPercentages
+        }        
 
-        return res.status(200).json({data, familyAttendance , familyPercentages} )
+
+        return res.status(200).json({
+          attendanceRecords
+        } )
         
     } catch (error) {
         console.log(error);
@@ -178,4 +181,7 @@ recordsToReturn.push(data.username)
      return res.status(500).send("Server error");
   }
 }
-module.exports= {getReport, getPreviousReports ,getSingleReport , getAbarwayi}
+
+
+
+module.exports= {getReport,getPreviousReports ,getSingleReport , getAbarwayi}

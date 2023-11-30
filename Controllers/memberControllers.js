@@ -26,7 +26,7 @@ const getMembers = async (req, res) => {
     const allUsers = await membersModel.findOne(); 
 
     if (!allUsers) {
-      return res.status(200).send({message:"No members found"});
+      return res.status(200).send({error:"No members found"});
     }
 
     const membersWithNumericalIds = allUsers.members.map((member, index) => ({
